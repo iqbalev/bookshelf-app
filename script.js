@@ -10,6 +10,9 @@
 
 // Membuat array kosong untuk menyimpan semua tugas
 const bookshelf = [];
+const RENDER_EVENT = "render-bookshelf";
+const SAVED_EVENT = "saved-bookshelf";
+const STORAGE_KEY = "BOOKSHELF_APP";
 
 // Membuat ID secara random
 function generateId() {
@@ -25,6 +28,51 @@ function generateBookshelfObject(id, title, author, year, isComplete) {
     year,
     isComplete,
   };
+}
+
+function findBookshelf(bookshelfId) {
+  for (const bookshelfItem of bookshelf) {
+    if (bookshelfItem.id === bookshelfId) {
+      return bookshelfItem;
+    }
+  }
+  return null;
+}
+
+function findBookshelfIndex(bookshelfId) {
+  for (const index in bookshelf) {
+    if (bookshelf[index].id === bookshelfId) {
+      return index;
+    }
+  }
+  return -1;
+}
+
+function isStorageExist() {
+  if (typeof Storage === undefined) {
+    alert("Browser kamu tidak mendukung local storage");
+    return false;
+  }
+  return true;
+}
+
+function saveData() {
+  if (isStorageExist()) {
+    const parsed = JSON.stringify(bookshelf);
+    localStorage.setItem(STORAGE_KEY, parsed);
+    document.dispatchEvent(new Event(SAVED_EVENT));
+  }
+}
+
+function loadDataFromStorage() {
+  const serializedData = localStorage.getItem(STORAGE_KEY);
+  let data = JSON.parse(serializedData);
+  if (data !== null) {
+    for (const bookshelfIndex of data) {
+      bookshelf.push(bookshelfIndex);
+    }
+  }
+  document.dispatchEvent(new Event(RENDER_EVENT));
 }
 
 // Membuat elemen HTML berdasarkan tugas yang diberikan
@@ -45,7 +93,7 @@ function createBookshelf(bookshelfObject) {
   textContainer.append(textTitle, textAuthor, textYear);
 
   const container = document.createElement("article");
-  container.classList.add("book-item");
+  container.classList.add("book_item");
   container.append(textContainer);
 
   // Jika selesai dibaca, tambahkan button remove
@@ -88,4 +136,53 @@ function addBook() {
     false
   );
   bookshelf.push(bookshelfObject);
+  document.dispatchEvent(new Event(RENDER_EVENT));
 }
+
+// Membuat function untuk menambah buku ke bagian sudah selesai dibaca
+function addToCompleteBookshelf(bookshelfId) {
+  const bookshelfTarget = findBookshelf(bookshelfId);
+
+  if (bookshelfTarget == null) return;
+
+  bookshelfTarget.isComplete = true;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function removeFromCompleteBookshelf(bookshelfId) {
+  const bookshelfTarget = findBookshelfIndex(bookshelfId);
+
+  if (bookshelfTarget === -1) return;
+
+  bookshelf.splice(bookshelfTarget, 1);
+  document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const submitForm = document.getElementById("inputBook");
+  submitForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    addBook();
+  });
+});
+
+document.addEventListener(SAVED_EVENT, () => {
+  console.log("Data berhasil disimpan.");
+});
+
+document.addEventListener(RENDER_EVENT, function () {
+  const unfinishedBook = document.getElementById("incompleteBookshelfList");
+  const finishedBook = document.getElementById("completeBookshelfList");
+
+  unfinishedBook.innerHTML = "";
+  finishedBook.innerHTML = "";
+
+  for (const bookshelfItem of bookshelf) {
+    const bookshelfElement = createBookshelf(bookshelfItem);
+    if (bookshelfItem.isComplete) {
+      finishedBook.append(bookshelfElement);
+    } else {
+      unfinishedBook.append(bookshelfElement);
+    }
+  }
+});
