@@ -15,7 +15,8 @@ body {
 body,
 input,
 button {
-  font-family: "Exo 2", sans-serif;
+  font-family: "Manrope", sans-serif;
+  letter-spacing: 1px;
 }
 
 input,
@@ -29,6 +30,7 @@ button {
   align-items: center;
   justify-content: center;
   background-color: rgba(100, 109, 237, 0.295);
+  border-bottom: 3px solid rgba(245, 245, 245, 0.5);
   color: whitesmoke;
 }
 
@@ -49,7 +51,7 @@ input {
   display: flex;
   flex-direction: column;
   padding: 16px;
-  border: 1px solid rgba(245, 245, 245, 0.5);
+  border: 3px solid rgba(245, 245, 245, 0.5);
   border-radius: 2px;
 }
 
@@ -103,7 +105,7 @@ input {
   flex-direction: column;
   align-items: center;
   padding: 16px;
-  border: 1px solid rgba(245, 245, 245, 0.5);
+  border: 3px solid rgba(245, 245, 245, 0.5);
   border-radius: 2px;
 }
 
@@ -137,7 +139,7 @@ input {
   display: flex;
   flex-direction: column;
   margin: 16px 0 0 0;
-  border: 1px solid rgba(245, 245, 245, 0.5);
+  border: 3px solid rgba(245, 245, 245, 0.5);
   border-radius: 2px;
   padding: 16px;
 }
@@ -155,7 +157,7 @@ input {
 
 .book_shelf > .book_list > .book_item {
   padding: 8px 16px 16px 16px;
-  border: 1px solid rgba(245, 245, 245, 0.5);
+  border: 3px solid rgba(245, 245, 245, 0.5);
   margin: 10px 0;
 }
 

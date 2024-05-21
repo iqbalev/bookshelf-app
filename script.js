@@ -109,7 +109,9 @@ function createBookshelf(bookshelfObject) {
     removeButton.classList.add("red");
     removeButton.textContent = "Hapus Buku";
     removeButton.addEventListener("click", function () {
-      removeBook(id);
+      if (confirm("Apakah Anda yakin ingin menghapus buku ini dari rak?")) {
+        removeBook(id);
+      }
     });
 
     actionContainer.append(unfinishedButton, removeButton);
@@ -127,7 +129,9 @@ function createBookshelf(bookshelfObject) {
     removeButton.classList.add("red");
     removeButton.textContent = "Hapus Buku";
     removeButton.addEventListener("click", function () {
-      removeBook(id);
+      if (confirm("Apakah Anda yakin ingin menghapus buku ini dari rak?")) {
+        removeBook(id);
+      }
     });
 
     actionContainer.append(finishedButton, removeButton);
