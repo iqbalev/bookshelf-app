@@ -89,13 +89,13 @@ function createBookshelf(bookshelfObject) {
   const textYear = document.createElement("p");
   textYear.innerText = year;
 
-  const textContainer = document.createElement("div");
-  textContainer.classList.add("action");
-  textContainer.append(textTitle, textAuthor, textYear);
+  const actionContainer = document.createElement("div");
+  actionContainer.classList.add("action");
+  // actionContainer.append(textTitle, textAuthor, textYear);
 
   const container = document.createElement("article");
   container.classList.add("book_item");
-  container.append(textContainer);
+  container.append(textTitle, textAuthor, textYear, actionContainer);
 
   // Jika selesai dibaca, tambahkan button remove
   if (isComplete) {
@@ -113,7 +113,7 @@ function createBookshelf(bookshelfObject) {
       removeBook(id);
     });
 
-    container.append(unfinishedButton, removeButton);
+    actionContainer.append(unfinishedButton, removeButton);
 
     // Jika belum selesai dibaca, tambahkan button finish
   } else {
@@ -131,7 +131,7 @@ function createBookshelf(bookshelfObject) {
       removeBook(id);
     });
 
-    container.append(finishedButton, removeButton);
+    actionContainer.append(finishedButton, removeButton);
   }
   return container;
 }
