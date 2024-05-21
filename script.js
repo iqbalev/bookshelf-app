@@ -143,7 +143,9 @@ function createBookshelf(bookshelfObject) {
 function addBook() {
   const bookTitleUserInput = document.getElementById("inputBookTitle").value;
   const bookAuthorUserInput = document.getElementById("inputBookAuthor").value;
-  const bookYearUserInput = document.getElementById("inputBookYear").value;
+  const bookYearUserInput = parseInt(
+    document.getElementById("inputBookYear").value
+  );
   const isUserFinishedReadingTheBook = document.getElementById(
     "inputBookIsComplete"
   ).checked;
