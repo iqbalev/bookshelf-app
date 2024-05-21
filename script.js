@@ -67,9 +67,10 @@ function saveData() {
 function loadDataFromStorage() {
   const serializedData = localStorage.getItem(STORAGE_KEY);
   let data = JSON.parse(serializedData);
+
   if (data !== null) {
-    for (const bookshelfIndex of data) {
-      bookshelf.push(bookshelfIndex);
+    for (const shelf of data) {
+      bookshelf.push(shelf);
     }
   }
   document.dispatchEvent(new Event(RENDER_EVENT));
@@ -136,7 +137,9 @@ function addBook() {
     false
   );
   bookshelf.push(bookshelfObject);
+
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 // Membuat function untuk menambah buku ke bagian sudah selesai dibaca
@@ -147,6 +150,7 @@ function addToCompleteBookshelf(bookshelfId) {
 
   bookshelfTarget.isComplete = true;
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function removeFromCompleteBookshelf(bookshelfId) {
@@ -156,14 +160,20 @@ function removeFromCompleteBookshelf(bookshelfId) {
 
   bookshelf.splice(bookshelfTarget, 1);
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   const submitForm = document.getElementById("inputBook");
+
   submitForm.addEventListener("submit", function (event) {
     event.preventDefault();
     addBook();
   });
+
+  if (isStorageExist()) {
+    loadDataFromStorage();
+  }
 });
 
 document.addEventListener(SAVED_EVENT, () => {
