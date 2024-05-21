@@ -99,25 +99,39 @@ function createBookshelf(bookshelfObject) {
 
   // Jika selesai dibaca, tambahkan button remove
   if (isComplete) {
+    const unfinishedButton = document.createElement("button");
+    unfinishedButton.classList.add("green");
+    unfinishedButton.textContent = "Belum Selesai Dibaca";
+    unfinishedButton.addEventListener("click", function () {
+      moveToUnfinishedBookshelf(id);
+    });
+
     const removeButton = document.createElement("button");
     removeButton.classList.add("red");
     removeButton.textContent = "Hapus Buku";
     removeButton.addEventListener("click", function () {
-      removeFromCompleteBookshelf(id);
+      removeBook(id);
     });
 
-    container.append(removeButton);
+    container.append(unfinishedButton, removeButton);
 
     // Jika belum selesai dibaca, tambahkan button finish
   } else {
-    const finishButton = document.createElement("button");
-    finishButton.classList.add("green");
-    finishButton.textContent = "Selesai Dibaca";
-    finishButton.addEventListener("click", function () {
-      addToCompleteBookshelf(id);
+    const finishedButton = document.createElement("button");
+    finishedButton.classList.add("green");
+    finishedButton.textContent = "Selesai Dibaca";
+    finishedButton.addEventListener("click", function () {
+      moveToFinishedBookshelf(id);
     });
 
-    container.append(finishButton);
+    const removeButton = document.createElement("button");
+    removeButton.classList.add("red");
+    removeButton.textContent = "Hapus Buku";
+    removeButton.addEventListener("click", function () {
+      removeBook(id);
+    });
+
+    container.append(finishedButton, removeButton);
   }
   return container;
 }
@@ -127,6 +141,9 @@ function addBook() {
   const bookTitleUserInput = document.getElementById("inputBookTitle").value;
   const bookAuthorUserInput = document.getElementById("inputBookAuthor").value;
   const bookYearUserInput = document.getElementById("inputBookYear").value;
+  const isUserFinishedReadingTheBook = document.getElementById(
+    "inputBookIsComplete"
+  ).checked;
 
   const generatedId = generateId();
   const bookshelfObject = generateBookshelfObject(
@@ -134,7 +151,7 @@ function addBook() {
     bookTitleUserInput,
     bookAuthorUserInput,
     bookYearUserInput,
-    false
+    isUserFinishedReadingTheBook
   );
   bookshelf.push(bookshelfObject);
 
@@ -143,7 +160,7 @@ function addBook() {
 }
 
 // Membuat function untuk menambah buku ke bagian sudah selesai dibaca
-function addToCompleteBookshelf(bookshelfId) {
+function moveToFinishedBookshelf(bookshelfId) {
   const bookshelfTarget = findBookshelf(bookshelfId);
 
   if (bookshelfTarget == null) return;
@@ -153,7 +170,16 @@ function addToCompleteBookshelf(bookshelfId) {
   saveData();
 }
 
-function removeFromCompleteBookshelf(bookshelfId) {
+function moveToUnfinishedBookshelf(bookshelfId) {
+  const bookshelfTarget = findBookshelf(bookshelfId);
+
+  if (bookshelfTarget == null) return;
+
+  bookshelfTarget.isComplete = false;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+}
+
+function removeBook(bookshelfId) {
   const bookshelfTarget = findBookshelfIndex(bookshelfId);
 
   if (bookshelfTarget === -1) return;
